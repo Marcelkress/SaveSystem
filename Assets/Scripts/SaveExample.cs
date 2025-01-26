@@ -4,20 +4,37 @@ using UnityEngine;
 
 public class SaveExample : MonoBehaviour
 {
+    public Settings settings;
 
-    public int health;
-    public string nameOfObject;
-    public List<float> scores;
+    public bool save;
 
     void Start()
     {
-        SaveSystem.SaveData<int>(health, "Health");
-        SaveSystem.SaveData<string>(nameOfObject, nameOfObject);
-        SaveSystem.SaveData<List<float>>(scores, "Player scores");
+        settings = new();
 
-        //health = SaveSystem.LoadData<int>("Health");
-        //scores = SaveSystem.LoadData<List<float>>("Player scores");
+        if (save == true)
+        {
+            settings.audioVol = 67.8f;
+            settings.fieldOfView = 95;
+            settings.accesibilty = false;
+            settings.sensitivity = 5.5f;
+
+            SaveSystem.SaveData<Settings>(settings, "Settings");
+        }
+        else
+        {
+            settings = SaveSystem.LoadData<Settings>("Settings");
+        }
     }
 
     
+}
+
+[System.Serializable]
+public class Settings
+{
+    public int fieldOfView;
+    public float audioVol;
+    public float sensitivity;
+    public bool accesibilty;
 }

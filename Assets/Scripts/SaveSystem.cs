@@ -7,56 +7,74 @@ public static class SaveSystem
 {
     public static SaveSlot currentSaveSlot;
 
+    /// <summary>
+    /// Save data in the persistent datapath. Data is saved as json text.
+    /// Specify T as the type of data to be stored.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="data"></param>
+    /// <param name="name"></param>
     public static void SaveData<T>(T data, string name)
     {
-        SaveData<T> classToSave = new SaveData<T>();
+        SaveData<T> classToSave = new();
 
         classToSave.data = data;
         classToSave.name = name;
 
         string jsonString = JsonUtility.ToJson(classToSave);
 
-        string filePath = GetFilePath(classToSave.name);
+        string filePath = GetFilePath(name);
 
         File.WriteAllText(filePath, jsonString);
 
         Debug.Log("Data saved to: " + filePath);
     }
 
+    /// <summary>
+    /// Load data from the name it was saved as. Specify T as the type expected.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="name"></param>
+    /// <returns></returns>
     public static T LoadData<T>(string name)
     {
-        string filePath = GetFilePath(name);
+        string filePath = GetFilePath(name); // Include the name in the path
 
         if (!File.Exists(filePath))
+        {
+            Debug.LogWarning("No file found at path: " + filePath);
             return default;
+        }
 
         string jsonString = File.ReadAllText(filePath);
 
         SaveData<T> loadedData = JsonUtility.FromJson<SaveData<T>>(jsonString);
 
-        Debug.Log("Data loaded from: " + filePath);
+        Debug.Log("Data successfully loaded from: " + filePath);
+
         return loadedData.data;
     }
 
+    /// <summary>
+    /// Returns the path to a file found by its name.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
     static string GetFilePath(string name)
     {
+        // Construct the directory path based on the save slot
         string slotString = currentSaveSlot.ToString();
+        string directoryPath = Path.Combine(Application.persistentDataPath, slotString);
 
-        string path = Path.Combine(Application.persistentDataPath, slotString + $"/{name}.json");
-
-        string directory = Path.Combine(Application.persistentDataPath, slotString);
-
-        if (!Directory.Exists(directory))
+        // Ensure the directory exists
+        if (!Directory.Exists(directoryPath))
         {
-            CreateDirectory(directory);
+            Directory.CreateDirectory(directoryPath);
+            Debug.Log("Directory created: " + directoryPath);
         }
 
-        return path;
-    }
-
-    static void CreateDirectory(string directory)
-    {
-        Directory.CreateDirectory(directory);
+        // Return the full path including the file name
+        return Path.Combine(directoryPath, name + ".json");
     }
 }
 

@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dd6a61e271cd4c74a7de792904d6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSaveSlot: 1
+  currentSaveSlot: 2
 --- !u!4 &1202930105
 Transform:
   m_ObjectHideFlags: 0
@@ -398,14 +398,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e8d1feea5bbc4bfbb1f6fe4b916a700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 120
-  nameOfObject: Player name
-  scores:
-  - 532
-  - 4
-  - 4.555555
-  - 3452
-  - 3.854256
+  settings:
+    fieldOfView: 0
+    audioVol: 0
+    sensitivity: 0
+    accesibilty: 0
+  save: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
